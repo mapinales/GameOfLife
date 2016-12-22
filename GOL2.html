@@ -1,0 +1,1002 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<style>
+			html {
+				background-color: #ccc;
+			}
+			
+			body {
+				width: auto;
+				overflow-x: scroll;
+			}
+			
+			container {
+				width: 100%;
+				height: 100%;
+			}
+			
+			#menuColumn {
+				width: 560px;
+				height: 100%;
+				position: relative;
+				float: left;
+				margin: 0 25px 25px 0;
+			}
+			
+			#menuRow {
+				width: 560px;
+				height: auto;
+				background-color: #fff;
+				margin-left: auto;
+				margin-right: auto;
+				position: relative;
+				text-align: center;
+			}
+			
+			#menuContainer {
+				dislpay: inline-block;
+				width: auto;
+				height: 100%;
+				margin-left: auto;
+				margin-right: auto;
+				float: center;
+				position: relative;
+				text-align: center;
+			}
+			
+			.optionRow {
+				margin-bottom: 10px;
+				width: 100%;
+				height: 30px;
+				display: inline-block;
+				text-align: center;
+			}
+			
+			.optionSubRow {
+				display: inline-block;
+			}
+			
+			.subRowLabel {
+				float: left;
+				width: 75px;
+			}
+			
+			.checkboxMenu, .subRowMenu {
+				float: left;
+			}
+			
+			.colorValue {
+				margin-right: 5px;
+				width: 50px;
+			}
+			
+			.colorFrames {
+				width: 100px;
+			}
+			
+			#controlRow {
+				width: 560px;
+				height: 52px;
+				background-color: #fff;
+				margin-left: auto;
+				margin-right: auto;
+				position: relative;
+				text-align: center;
+			}
+			
+			#controlContainer {
+				display: inline-block;
+				width: auto;
+				height: 100%;
+				margin-left: auto;
+				margin-right: auto;
+				float: center;
+				position: relative;
+			}
+			
+			.controlButton {
+				width: 110px;
+				height: 50px;
+				background-color: rgb(136, 136, 136);
+				margin: 1px;
+				float: left;
+				cursor: pointer;
+				text-align: center;
+				line-height: 50px;
+				position: relative;
+			}
+			
+			#informationSection {
+				width: 200px;
+				height: auto;
+			}
+			
+			#gameColumn {
+				width: auto;
+				height: auto;
+				position: relative;
+				float: left;
+			}
+			
+			#gameBoard {
+				width: auto;
+				height: auto;
+				margin-left: auto;
+				margin-right: auto;
+				position: relative;
+				display: inline-block;	
+				transform-origin: 0 0;
+			}
+			
+			.row {
+				width: 100%;
+				height: 27px;
+			}
+			
+			.cell {
+				width: 25px;
+				height: 25px;
+				margin: 1px;
+				float: left;
+				cursor: pointer;
+			}	
+		</style>
+		<style id="onCellStyle">
+			.onCell {
+				background-color: rgb(246, 255, 0);
+			}
+		</style>
+		<style id="offCellStyle">
+			.offCell {
+				background-color: rgb(136, 136, 136);
+			}
+		</style>
+		<style id="backgroundStyle">
+			.boardBackground {
+				background-color: rgb(255, 255, 255);
+			}
+		</style>
+		<title>
+			Game of Life Simulation
+		</title>
+	</head>
+	<body>
+		<div id="container">
+			<div id="menuColumn">
+				<div id="menuRow">
+					<div id="menuContainer">
+						<div class="optionRow">
+							OPTIONS
+						</div>
+						<div id="sizeRow" class="optionRow">
+							Game Size (min 10, max 100):
+							<input id="xSize" type="number" min="10" max="100" /> X by
+							<input id="ySize" type="number" min="10" max="100" /> Y &nbsp&nbsp
+							<input type="button" id="sizeRandom" value="Random" />
+						</div>
+						<div id="speedRow" class="optionRow">
+							Speed (milliseconds per frame):
+							<input id="gameSpeed" type="number" min="0" />
+						</div>
+						<div id="framesRow" class="optionRow">
+							Limit number of frames (0 for infinite run):
+							<input id="numFrames" type="number" value="0" min="0" />
+						</div>
+						<div id="bornRow" class="optionRow">
+							<div class="optionSubRow">
+								<div class="subRowLabel">
+									Born: 
+								</div>
+								<div id="bornMenu" class="checkboxMenu">
+									<input type="checkbox" name="bornNumber" value="1" /> 1 &nbsp
+									<input type="checkbox" name="bornNumber" value="2" /> 2 &nbsp
+									<input type="checkbox" name="bornNumber" value="3" checked="checked" class="defaultChecked" /> 3 &nbsp
+									<input type="checkbox" name="bornNumber" value="4" /> 4 &nbsp
+									<input type="checkbox" name="bornNumber" value="5" /> 5 &nbsp
+									<input type="checkbox" name="bornNumber" value="6" /> 6 &nbsp
+									<input type="checkbox" name="bornNumber" value="7" /> 7 &nbsp
+									<input type="checkbox" name="bornNumber" value="8" /> 8 &nbsp&nbsp
+								</div>
+								<input type="button" id="bornRandom" value="Random" />
+								<input type="button" id="bornReset" value="Reset" />
+							</div>
+						</div>
+						<div id="sustainRow" class="optionRow">
+							<div class="optionSubRow">
+								<div class="subRowLabel">
+									Sustain: 
+								</div>
+								<div id="sustainMenu" class="checkboxMenu">
+									<input type="checkbox" name="sustainNumber" value="1" /> 1 &nbsp
+									<input type="checkbox" name="sustainNumber" value="2" checked="checked" class="defaultChecked" /> 2 &nbsp
+									<input type="checkbox" name="sustainNumber" value="3" checked="checked" class="defaultChecked" /> 3 &nbsp
+									<input type="checkbox" name="sustainNumber" value="4" /> 4 &nbsp
+									<input type="checkbox" name="sustainNumber" value="5" /> 5 &nbsp
+									<input type="checkbox" name="sustainNumber" value="6" /> 6 &nbsp
+									<input type="checkbox" name="sustainNumber" value="7" /> 7 &nbsp
+									<input type="checkbox" name="sustainNumber" value="8" /> 8 &nbsp&nbsp
+								</div>
+								<input type="button" id="sustainRandom" value="Random" />
+								<input type="button" id="sustainReset" value="Reset" />
+							</div>
+						</div>
+						<div id="wrapRow" class="optionRow">
+							<div class="optionSubRow">
+								<div class="subRowLabel" style="width: auto!important; margin-right: 15px;">
+									World wrap:
+								</div>
+								<div id="wrapMenu" class="checkboxMenu">
+									<input type="checkbox" name="worldWrap" value="true" />
+								</div>
+							</div>					
+						</div>
+						<div id="restartRow" class="optionRow">
+							<div class="optionSubRow">
+								<div class="subRowLabel" style="width: auto!important; margin-right: 15px;">
+									Auto restart on game over:
+								</div>
+								<div id="restartMenu" class="checkboxMenu">
+									<input type="checkbox" name="autoRestart" value="true" />
+								</div>
+							</div>
+						</div>
+						<div id="onColorRow" class="optionRow">
+							<div class="optionSubRow">
+								<div class="subRowLabel" style="width: auto!important; margin-right: 15px;">
+									On Color:
+								</div>
+								<div id="onColorMenu" class="subRowMenu">
+									R <input id="onRVal" type="number" class="colorValue" min="0" max="255" />
+									G <input id="onGVal" type="number" class="colorValue" min="0" max="255" />
+									B <input id="onBVal" type="number" class="colorValue" min="0" max="255" />
+									<input id="onColorApply" type="button" value="Apply" style="margin-left: 5px;" />
+									<input id="onColorRandom" type="button" value="Random" style="margin-left: 5px;" />
+									<input id="onColorReset" type="button" value="Reset" style="margin-left: 5px;" />
+								</div>
+							</div>	
+						</div>
+						<div id="onRandomizeRow" class="optionRow">
+							Randomize On Color every
+							<input type="number" id="onFrames" class="colorFrames" min="0" /> frames (0 is off)
+						</div>
+						<div id="offColorRow" class="optionRow">
+							<div class="optionSubRow">
+								<div class="subRowLabel" style="width: auto!important; margin-right: 15px;">
+									Off Color:
+								</div>
+								<div id="offColorMenu" class="subRowMenu">
+									R <input id="offRVal" type="number" class="colorValue" min="0" max="255" />
+									G <input id="offGVal" type="number" class="colorValue" min="0" max="255" />
+									B <input id="offBVal" type="number" class="colorValue" min="0" max="255" />
+									<input id="offColorApply" type="button" value="Apply" style="margin-left: 5px;" />
+									<input id="offColorRandom" type="button" value="Random" style="margin-left: 5px;" />
+									<input id="offColorReset" type="button" value="Reset" style="margin-left: 5px;" />
+								</div>
+							</div>	
+						</div>
+						<div id="offRandomizeRow" class="optionRow">
+							Randomize Off Color every
+							<input type="number" id="offFrames" class="colorFrames" min="0" /> frames (0 is off)
+						</div>
+						<div id="backgroundColorRow" class="optionRow">
+							<div class="optionSubRow">
+								<div class="subRowLabel" style="width: auto!important; margin-right: 15px;">
+									Background:
+								</div>
+								<div id="backgroundColorMenu" class="subRowMenu">
+									R <input id="backgroundRVal" type="number" class="colorValue" min="0" max="255" />
+									G <input id="backgroundGVal" type="number" class="colorValue" min="0" max="255" />
+									B <input id="backgroundBVal" type="number" class="colorValue" min="0" max="255" />
+									<input id="backgroundColorApply" type="button" value="Apply" style="margin-left: 5px;" />
+									<input id="backgroundColorRandom" type="button" value="Random" style="margin-left: 5px;" />
+									<input id="backgroundColorReset" type="button" value="Reset" style="margin-left: 5px;" />
+								</div>
+							</div>	
+						</div>
+						<div id="backgroundRandomizeRow" class="optionRow">
+							Randomize Background Color every
+							<input type="number" id="backgroundFrames" class="colorFrames" min="0" /> frames (0 is off)
+						</div>
+					</div>
+				</div>
+				<div id="controlRow">
+					<div id="controlContainer">
+						<div id="startButton" class="controlButton">
+							START
+						</div>
+						<div id="pauseButton" class="controlButton">
+							PAUSE
+						</div>
+						<div id="restartButton" class="controlButton">
+							RESTART
+						</div>
+						<div id="clearButton" class="controlButton">
+							CLEAR GRID
+						</div>
+						<div id="resetButton" class="controlButton">
+							RESET ALL
+						</div>
+					</div>
+				</div>
+				<div id="informationSection">
+					
+				</div>
+			</div>
+			<div id="gameColumn">
+				<div id="gameBoard" class="boardBackground" oncontextmenu="return false;"></div>
+			</div>
+		</div>
+	
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<!--<script src="jquery-1.10.2.js"></script>-->
+		<script>
+			$(function(){
+				//game base variables
+				var gameRunning = false;
+				var timer;
+				var frameCount = 0;
+				var gameArray = [];
+				var newState = [];
+				var gameStart = [];
+				var lastState = [];
+				var isMouseLeftDown = false;
+				var isMouseRightDown = false;
+				var minSize = 10;
+				var maxSize = 100;
+				var isMobile = isMobileCheck();
+				//default adjustable values
+				var defaultXSize = 40;
+				var defaultYSize = 40;
+				var defaultSpeed = 300;
+				var defaultFrames = 0;
+				var defaultOffColor = "rgb(136, 136, 136)";
+				var defaultOnColor = "rgb(246, 255, 0)";	
+				var defaultBackgroundColor = "rgb(255, 255, 255)";
+				//game customizable variables
+				var gameSpeed = 300;
+				var frameLimit = 0;
+				var bornNumbers = [];
+				var sustainNumbers = [];
+				var shouldWrap = false;
+				var shouldAutoRestart = false;
+				var randomOnFrames = 0;
+				var randomOffFrames = 0; 
+				var randomBackgroundFrames = 0;
+				
+				
+				
+				//functions
+				setDefaults();
+				createGrid();
+				
+				//detect whether or not this is a mobile browser
+				function isMobileCheck() {
+				  try{ document.createEvent("TouchEvent"); return true; }
+				  catch(e){ return false; }
+				}
+				
+				//set default values
+				function setDefaults() {
+					$("#xSize").val(defaultXSize);
+					$("#ySize").val(defaultYSize);
+					$("#gameSpeed").val(defaultSpeed);
+					$("#numFrames").val(defaultFrames);
+					$("#onRVal").val(246);
+					$("#onGVal").val(255);
+					$("#onBVal").val(0);
+					$("#onCellStyle").html(".onCell { background-color: " + defaultOnColor + ";}");
+					$("#offRVal").val(136);
+					$("#offGVal").val(136);
+					$("#offBVal").val(136);
+					$("#offCellStyle").html(".offCell { background-color: " + defaultOffColor + ";}");
+					$("#backgroundRVal").val(255);
+					$("#backgroundGVal").val(255);
+					$("#backgroundBVal").val(255);
+					$("#backgroundStyle").html(".boardBackground { background-color: " + defaultBackgroundColor + ";}");
+					$(".colorFrames").val(0);
+				}
+				
+				//build the grid
+				function createGrid(){
+					//erase the current game board
+					$("#gameBoard").empty();
+					//collect the new size dimensions					
+					var xValue = parseInt($("#xSize").val());
+					var yValue = parseInt($("#ySize").val());
+					//create the new game board
+					for (var i = 0; i < yValue; i++) {
+						var string = "<div data-row='" + i + "' class='row'>";
+						for (var j = 0; j < xValue; j++)
+							string += "<div class='cell'></div>";
+						$("#gameBoard").append(string + "</div>");
+					}				
+					scaleGameBoard();	
+					//set all cells to off
+					$(".cell").addClass("offCell").removeClass("onCell");
+					//reinitialize defaults
+					defaultSetup();
+				}
+				
+				$(window).on ("resize", function(){
+					scaleGameBoard();
+				});
+				
+				//scale the game board	
+				function scaleGameBoard() {
+					var winMax = isMobile ? $(window).innerWidth() - 75 : $(window).innerHeight() - 25;
+					var scale = winMax / Math.max($("#gameBoard").outerWidth(), $("#gameBoard").outerHeight()); 
+					$("#gameBoard").css({ "-moz-transform": "scale(" + scale + ")", "zoom": scale });
+					
+					//var winWidth = $(window).innerWidth() - $("#menuColumn").outerWidth() - 150; 
+					//var winHeight = $(window).innerHeight() - 25; 
+					//var scaleW = winWidth / $("#gameBoard").outerWidth();
+					//var scaleH = winHeight / $("#gameBoard").outerHeight();
+					//$("#gameBoard").css({ "transform": "scale( " + scaleW + ", " + scaleH + ")" });
+				}
+				
+				//setup all arrays and cell events
+				function defaultSetup() {					
+					initializeGameArray();
+					newState = initializeStateArray();
+					lastState = initializeStateArray();
+					gameStart = initializeStateArray();
+					
+					//add click event to the cells
+					$(".cell").mousedown(function(event){
+						if (!gameRunning && event.which == 1) {
+							toggleCellState($(this));
+						}
+					})
+					.mouseenter(function(){
+						if (!gameRunning) {
+							if (isMouseLeftDown)
+								toggleSpecificCellState($(this), true);
+							else if (isMouseRightDown)
+								toggleSpecificCellState($(this), false);
+						}
+					});
+				}
+				
+				//initialize the array that holds the cells and their states
+				function initializeGameArray() {
+					gameArray = [];
+					for (var i = 0; i < $(".row").length; i++) {
+						gameArray[i] = [];
+						for (var j = 0; j < $($(".row")[i]).children().length; j++) {
+							gameArray[i].push({ element: $($(".row")[i]).children()[j], state: false});
+						}
+					}
+				}
+				
+				//initialize all arrays that track the states of the game
+				function initializeStateArray() {
+					var array = [];
+					for (var i = 0; i < gameArray.length; i++) {
+						array[i] = [];
+						for (var j = 0; j < gameArray[i].length; j++)
+							array[i][j] = false;
+					}
+					return array;
+				}
+				
+				//add mouse checking events to the body
+				$('body').mousedown(function(event) {
+					switch (event.which) {
+						case 1:
+							if (!isMouseRightDown)
+								isMouseLeftDown = true;
+							break;
+						case 3: 
+							if (!isMouseLeftDown)
+								isMouseRightDown = true;
+							break;
+					}
+				})
+				.mouseup(function(event){
+					switch (event.which) {
+						case 1:
+							isMouseLeftDown = false;
+							break;
+						case 3: 
+							isMouseRightDown = false;
+							break;
+					}
+				});				
+				
+				//process the actual cell state change
+				function toggleCellState(cell) {
+					var isOn = false;
+					if ($(cell).hasClass("offCell")) {
+						$(cell).addClass("onCell").removeClass("offCell");
+						isOn = true;
+					}
+					else
+						$(cell).addClass("offCell").removeClass("onCell");
+					
+					var row = $(cell).parent().data("row");
+					
+					for (var i = 0; i < gameArray[row].length; i++) {
+						if ($(cell)[0] == gameArray[row][i].element)
+							gameArray[row][i].state = isOn;
+					}
+					newState = initializeStateArray();
+					lastState = initializeStateArray();
+				}
+				
+				function toggleSpecificCellState(cell, state) {
+					if (state)
+						$(cell).addClass("onCell").removeClass("offCell");
+					else
+						$(cell).addClass("offCell").removeClass("onCell");
+						
+					var row = $(cell).parent().data("row");
+					
+					for (var i = 0; i < gameArray[row].length; i++) {
+						if ($(cell)[0] == gameArray[row][i].element)
+							gameArray[row][i].state = state;
+					}
+					newState = initializeStateArray();
+					lastState = initializeStateArray();
+				}
+				
+				//add click event to the start button
+				$("#startButton").click(function(){
+					if (!gameRunning) {
+						//flag the game state as running
+						gameRunning = true;
+						//disable the cursor to reinforce that nothing is clickable while the game is running
+						$(".cell, #gameBoard").css({"cursor": "none"});
+						//disable the options menu
+						$("#menuRow").find("input").prop("disabled", true);
+						//set the options
+						setOptions();
+						//capture the state of the game start
+						captureStart();
+						//start the simulation
+						gameLoop();
+					}
+				});
+				
+				//add click event to the pause button
+				$("#pauseButton").click(function(){
+					pauseGame();
+				});
+				
+				//add click event to the restart button
+				$("#restartButton").click(function(){
+					if (!shouldAutoRestart)
+						pauseGame();
+					for (var i = 0; i < gameArray.length; i++) {
+						for (var j = 0; j < gameArray[i].length; j++) {
+							newState[i][j] = gameStart[i][j];
+						}
+					}
+					updateDisplay();
+					newState = initializeStateArray();
+					lastState = initializeStateArray();
+				});
+				
+				//add click event to the grid clear button
+				$("#clearButton").click(function(){
+					pauseGame();
+					createGrid();
+				});
+				
+				//add click event to the reset button
+				$("#resetButton").click(function(){
+					//uncheck all checkboxes
+					$("#menuRow").find("input[type=checkbox]").prop("checked", false);
+					//check the default boxes
+					$(".defaultChecked").prop("checked", true);
+					//reset the grid
+					setDefaults();
+					createGrid();					
+				});
+				
+				//ensure board size is within the limits
+				$("#sizeRow").find("input").change(function(){
+					if ($(this).val() < minSize)
+						$(this).val(minSize);
+					if ($(this).val() > maxSize)
+						$(this).val(maxSize);
+						
+					createGrid();
+				});
+				
+				//add click event to the random size button
+				$("#sizeRandom").click(function(){
+					$("#xSize").val(Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize);
+					$("#ySize").val(Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize);
+					$("#ySize").trigger("change");
+				});
+				
+				//on speed change, ensure a negative number was not entered
+				$("#gameSpeed").change(function() {
+					if ($(this).val() < 0)
+						$(this).val(defaultSpeed);
+				});
+				
+				//on frame change, ensure a negative number was not entered
+				$("#numFrames").change(function() {
+					if ($(this).val() < 0)
+						$(this).val(0);
+				});
+				
+				//add click event to the random button for born numbers
+				$("#bornRandom").click(function(){
+					$("#bornMenu").find("input").each(function(){
+						$(this).prop("checked", getRandomColorInt() % 2 == 0);
+					});
+				});
+				
+				//add click event to the reset button for born numbers 
+				$("#bornReset").click(function(){
+					$("#bornMenu").find("input").prop("checked", false);
+					$("#bornMenu").find(".defaultChecked").prop("checked", true);
+				});
+				
+				//add click event to the random button for sustain numbers
+				$("#sustainRandom").click(function(){
+					$("#sustainMenu").find("input").each(function(){
+						$(this).prop("checked", getRandomColorInt() % 2 == 0);
+					});
+				});
+				
+				//add click event to the reset button for sustain numbers 
+				$("#sustainReset").click(function(){
+					$("#sustainMenu").find("input").prop("checked", false);
+					$("#sustainMenu").find(".defaultChecked").prop("checked", true);
+				});
+				
+				//on color value change, ensure value is within limits
+				$(".colorValue").change(function(){
+					if ($(this).val() < 0)
+						$(this).val(0);
+					if ($(this).val() > 255)
+						$(this).val(255);
+				});
+				
+				//generate a random number between 0 and 255
+				function getRandomColorInt() {
+					return Math.floor(Math.random() * 256);
+				}
+				
+				//add click event to the on color random button
+				$("#onColorRandom").click(function(){
+					$("#onRVal").val(getRandomColorInt());
+					$("#onGVal").val(getRandomColorInt());
+					$("#onBVal").val(getRandomColorInt());
+					$("#onColorApply").trigger("click");
+				});
+				
+				//add click event to the on color apply button
+				$("#onColorApply").click(function(){
+					var color = "rgb(" + $("#onRVal").val() + ", " + $("#onGVal").val() + ", " + $("#onBVal").val() + ")";
+					$("#onCellStyle").html(".onCell { background-color: " + color + ";}");
+				});
+				
+				//add click event to the on color reset button
+				$("#onColorReset").click(function(){
+					$("#onCellStyle").html(".onCell { background-color: " + defaultOnColor + ";}");
+					$("#onRVal").val(246);
+					$("#onGVal").val(255);
+					$("#onBVal").val(0);
+				});
+				
+				//add click event to the off color random button
+				$("#offColorRandom").click(function(){
+					$("#offRVal").val(getRandomColorInt());
+					$("#offGVal").val(getRandomColorInt());
+					$("#offBVal").val(getRandomColorInt());
+					$("#offColorApply").trigger("click");
+				});
+				
+				//add click event to the off color apply button
+				$("#offColorApply").click(function(){
+					var color = "rgb(" + $("#offRVal").val() + ", " + $("#offGVal").val() + ", " + $("#offBVal").val() + ")";
+					$("#offCellStyle").html(".offCell { background-color: " + color + ";}");
+				});
+				
+				//add click event to the off color reset button
+				$("#offColorReset").click(function(){
+					$("#offCellStyle").html(".offCell { background-color: " + defaultOffColor + ";}");
+					$("#offRVal").val(136);
+					$("#offGVal").val(136);
+					$("#offBVal").val(136);
+				});
+				
+				//add click event to the background color random button
+				$("#backgroundColorRandom").click(function(){
+					$("#backgroundRVal").val(getRandomColorInt());
+					$("#backgroundGVal").val(getRandomColorInt());
+					$("#backgroundBVal").val(getRandomColorInt());
+					$("#backgroundColorApply").trigger("click");
+				});
+				
+				//add click event to the background color apply button
+				$("#backgroundColorApply").click(function(){
+					var color = "rgb(" + $("#backgroundRVal").val() + ", " + $("#backgroundGVal").val() + ", " + $("#backgroundBVal").val() + ")";
+					$("#backgroundStyle").html(".boardBackground { background-color: " + color + ";}");
+				});
+				
+				//add click event to the background color reset button
+				$("#backgroundColorReset").click(function(){
+					$("#backgroundStyle").html(".boardBackground { background-color: " + defaultBackgroundColor + ";}");
+					$("#backgroundRVal").val(255);
+					$("#backgroundGVal").val(255);
+					$("#backgroundBVal").val(255);
+				});
+				
+				//ensure the randomized frames number is never less than zero
+				$(".colorFrames").change(function(){
+					if ($(this).val() < 0)
+					$(this).val(0);
+				});
+				
+				//collect the user's options for the current run of the game
+				function setOptions() {
+					var i, j;
+					//get the desired game speed
+					gameSpeed = $("#gameSpeed").val();
+					//reset the frame count
+					frameCount = 0;
+					//get the frame limit
+					frameLimit = $("#numFrames").val();
+					//get the number of alive cells to birth a dead cell
+					bornNumbers = [];
+					for (i = 0; i < $("#bornMenu").find("input:checked").length; i++) {
+						j = parseInt($($("#bornMenu").find("input:checked")[i]).val());
+						bornNumbers.push(j);
+					}
+					//get the number of alive cells to sustain an alive cell
+					sustainNumbers = [];
+					for (i = 0; i < $("#sustainMenu").find("input:checked").length; i++) {
+						j = parseInt($($("#sustainMenu").find("input:checked")[i]).val());
+						sustainNumbers.push(j);
+					}
+					//get the world wrapping option
+					shouldWrap = $("#wrapMenu").find("input:checked").length > 0;
+					//get the auto restart option
+					shouldAutoRestart = $("#restartMenu").find("input:checked").length > 0;
+					//get the random color frames
+					randomOnFrames = $("#onFrames").val();
+					randomOffFrames = $("#offFrames").val();
+					randomBackgroundFrames = $("#backgroundFrames").val();
+				}
+				
+				//store the user's game setup in case they immediately want to restart from that position
+				function captureStart() {
+					for (var i = 0; i < gameArray.length; i++) {
+						for (var j = 0; j < gameArray[i].length; j++) {
+							gameStart[i][j] = gameArray[i][j].state;
+						}
+					}
+				}
+				
+				//called when the game needs to be paused
+				function pauseGame() {
+					//flag the game state as stopped
+					gameRunning = false;
+					//enable the cursors while the game is not running
+					$(".cell").css({"cursor": "pointer"});
+					$("#gameBoard").css({"cursor": "default"});
+					//enable the options menu
+					$("#menuRow").find("input").prop("disabled", false);
+					//stop the timer
+					clearTimeout(timer);
+				}
+				
+				//run the game loop
+				function gameLoop() {
+					timer = setTimeout(gameLoop, gameSpeed);					
+					
+					//increment the frame count
+					frameCount++;
+					//check the current state of the game
+					analyzeGame();
+					//update the display accordingly
+					updateDisplay();
+					//check for conditions to end the game automatically
+					checkForCompleteDeath();
+					//randomize colors as necessary
+					if (randomOnFrames > 0 && frameCount % randomOnFrames == 0)
+						$("#onColorRandom").trigger("click");
+					if (randomOffFrames > 0 && frameCount % randomOffFrames == 0)
+						$("#offColorRandom").trigger("click");
+					if (randomBackgroundFrames > 0 && frameCount % randomBackgroundFrames == 0)
+						$("#backgroundColorRandom").trigger("click");
+						
+					updateInformation();
+				}
+				
+				//go through the game array to apply to rules to each cell to determine if they live or die
+				function analyzeGame() {
+					var count = 0, k;
+					
+					for (var j = 0; j < gameArray[0].length; j++) {
+						for (var i = 0; i < gameArray.length; i++) {
+							count = shouldWrap ? countNeighborsWrap(j, i) : countNeighbors(j, i);
+							
+							//current rule to sustain a cell
+							if (gameArray[i][j].state) {
+								var shouldSustain = false;
+								for (k = 0; k < sustainNumbers.length; k++) {
+									if (count == sustainNumbers[k]) {
+										shouldSustain = true;
+										break;
+									}									
+								}
+								
+								newState[i][j] = shouldSustain;
+							}
+							//current rule to birth a cell
+							else {
+								//if the number of alive neighbors is an exact match for one of the born numbers, this dead cell is now alive
+								for (k = 0; k < bornNumbers.length; k++) {
+									if (count == bornNumbers[k]) {
+										newState[i][j] = true;
+										break;
+									}
+								}
+							}							
+						}
+					}
+				}
+				
+				//count the number of neighbors to the current cell that are currently alive
+				function countNeighbors(x, y) {
+					var count = 0;
+
+					//check left
+					if (x - 1 >= 0 && gameArray[y][x - 1].state)
+						count++;
+					//check up left
+					if (x - 1 >= 0 && y - 1 >= 0 && gameArray[y - 1][x - 1].state)
+						count++;
+					//check up
+					if (y - 1 >= 0 && gameArray[y - 1][x].state)
+						count++;
+					//check up right
+					if (x + 1 < gameArray[0].length && y - 1 >= 0 && gameArray[y - 1][x + 1].state)
+						count++;
+					//check right
+					if (x + 1 < gameArray[0].length && gameArray[y][x + 1].state)
+						count++;
+					//check down right
+					if (x + 1 < gameArray[0].length && y + 1 < gameArray.length && gameArray[y + 1][x + 1].state)
+						count++;
+					//check down
+					if (y + 1 < gameArray.length && gameArray[y + 1][x].state)
+						count++;
+					//check down left
+					if (x - 1 >= 0 && y + 1 < gameArray.length && gameArray[y + 1][x - 1].state)
+						count++;
+
+					return count;
+				}
+				
+				//count the number of neighbors to the current cell, including wrapped neighbors, that are currently alive
+				function countNeighborsWrap(x, y) {
+					var count = 0;
+					var xLast = gameArray[0].length - 1;
+					var yLast = gameArray.length - 1;
+					var newX, newY;
+					//check left
+					newX = x - 1 >= 0 ? x - 1 : xLast;
+					if (gameArray[y][newX].state)
+						count++;
+					//check up left
+					newX = x - 1 >= 0 ? x - 1 : xLast;
+					newY = y - 1 >= 0 ? y - 1 : yLast;
+					if (gameArray[newY][newX].state)
+						count++;
+					//check up
+					newY = y - 1 >= 0 ? y - 1 : yLast;
+					if (gameArray[newY][x].state)
+						count++;
+					//check up right
+					newX = x + 1 <= xLast ? x + 1 : 0;
+					newY = y - 1 >= 0 ? y - 1 : yLast;
+					if (gameArray[newY][newX].state)
+						count++;
+					//check right
+					newX = x + 1 <= xLast ? x + 1 : 0;
+					if (gameArray[y][newX].state)
+						count++;
+					//check down right
+					newX = x + 1 <= xLast ? x + 1 : 0;
+					newY = y + 1 <= yLast ? y + 1 : 0;
+					if (gameArray[newY][newX].state)
+						count++;
+					//check down
+					newY = y + 1 <= yLast ? y + 1 : 0;
+					if (gameArray[newY][x].state)
+						count++;
+					//check down left
+					newX = x - 1 >= 0 ? x - 1 : xLast;
+					newY = y + 1 <= yLast ? y + 1 : 0;
+					if (gameArray[newY][newX].state)
+						count++;
+						
+					return count;
+				}
+				
+				//update the cell display to show changes in alive/dead states
+				function updateDisplay() {				
+					for (var i = 0; i < gameArray.length; i++) {
+						for (var j = 0; j < gameArray[i].length; j++) {
+							//store the current states as the last state
+							lastState[i][j] = gameArray[i][j].state;							
+							//update the current state
+							gameArray[i][j].state = newState[i][j];
+							//adjust the color of the cell accordingly
+							if (gameArray[i][j].state)
+								$(gameArray[i][j].element).addClass("onCell").removeClass("offCell");
+							else
+								$(gameArray[i][j].element).addClass("offCell").removeClass("onCell");
+						}
+					}
+				}
+				
+				//check for game over conditions
+				function checkForCompleteDeath() {
+					var anyAlive = false;
+					
+					for (var i = 0; i < gameArray.length; i++) {
+						for (var j = 0; j < gameArray[i].length; j++) {
+							if (gameArray[i][j].state) {
+								anyAlive = true;
+								break;
+							}
+						}
+					}
+					
+					//if no cell is alive, or the frame limit has been reached, end the game automatically
+					if (!anyAlive || (frameLimit > 0 && frameCount >= frameLimit) || hasGameNotChanged()) {
+						if (shouldAutoRestart) {
+							$("#restartButton").trigger("click");
+							var restartTime = setTimeout(function(){
+								$("#startButton").trigger("click");
+								clearTimeout(restartTime);
+							}, gameSpeed);
+						}
+						else {
+							$("#pauseButton").trigger("click");
+							newState = initializeStateArray();
+							lastState = initializeStateArray();
+						}
+					}
+				}
+				
+				//check to see if the current game state is the same as the last game state
+				function hasGameNotChanged() {
+					var isSame = true;
+					for (var i = 0; i < lastState.length; i++) {
+						for (var j = 0; j < lastState[i].length; j++) {
+							if (lastState[i][j] != newState[i][j]) {
+								isSame = false;
+								break;
+							}
+						}
+					}
+					return isSame;
+				}
+				
+				function updateInformation() {
+					var message = "Current generation: " + (frameCount - 1) + "\n";
+					var count = 0;
+					for (var i = 0; i < gameArray.length; i++) {
+						for (var j = 0; j < gameArray[i].length; j++) {
+							if (gameArray[i][j].state)
+								count++;
+						}
+					}
+					message += "Population: " + count;
+					//$("#gameColumn").prop("title", message);
+					$("#informationSection").html(message);
+				}
+			});
+		</script>
+	</body>
+</html>
